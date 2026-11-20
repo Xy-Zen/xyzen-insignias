@@ -1,0 +1,734 @@
+/**
+ * @name Nazuna v5
+ * @description Tema morado suave con fondo propio. Servidores centrados abajo y perfil arriba a la izquierda.
+ * @version 1.3.0
+ * @author Xyzen
+ */
+
+:root {
+  --nz-bg-image: url("https://i.imgur.com/ppk6ZHj.png");
+  --nz-accent: #9b69f5;
+  --nz-accent-strong: #7c4dff;
+  --nz-accent-soft: #d2bcff;
+  --nz-category: #a371ff;
+  --nz-category-glow: rgba(163, 113, 255, 0.45);
+  --nz-channel: #a99ccb;
+  --nz-channel-hover: #e3d8ff;
+  --nz-channel-active: #f4eeff;
+  --nz-text-muted: #b9b2cc;
+  --font: "gg sans", "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* Layout: servidores abajo + perfil abajo-izquierda */
+  --nz-bar-alto: 56px;                    /* alto de la barra de servidores */
+  --nz-icono-escala: 1;             /* tamaño de los iconos de servidores (1 = normal) */
+
+  /* Icono de inicio (en vez del logo de Discord). Puedes poner cualquier imagen:
+     para una imagen cuadrada tipo avatar usa --nz-home-size: cover y --nz-home-pos: center */
+  --nz-home-icon: var(--nz-bg-image);
+  --nz-home-size: 450%;
+  --nz-home-pos: 50% 38%;
+  --nz-sidebar: 298px;                    /* ancho de la columna de canales y del perfil */
+  --nz-bar-fondo: rgba(16, 12, 26, 0.75); /* mismo fondo que el panel de perfil */
+  --nz-bar-blur: 10px;
+  --nz-caja-margen: 4px;                  /* margen lateral de la caja de texto (alinear con los mensajes) */
+  --nz-titlebar: 32px;                   /* alto de la franja del título de arriba */
+}
+
+/* ---------- Fondo ---------- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--nz-bg-image) center / cover no-repeat fixed;
+}
+body, #app-mount {
+  background: none !important;
+}
+
+/* ---------- Paleta morado suave ---------- */
+html.theme-dark:root,
+#app-mount .theme-dark {
+  --background-floating: #1a1622;
+  --background-tertiary: #1c1824;
+  --background-secondary-alt: #221e2b;
+  --background-secondary: #221e2b;
+  --background-modifier-accent: rgba(150, 100, 240, 0.10);
+  --background-modifier-hover: rgba(150, 100, 240, 0.14);
+  --background-modifier-active: rgba(150, 100, 240, 0.20);
+  --background-modifier-selected: rgba(150, 100, 240, 0.26);
+  --interactive-normal: var(--nz-accent-strong);
+  --interactive-hover: #a07bff;
+  --interactive-active: #c6adff;
+  --header-secondary: #cbbcf0;
+  --channels-default: #b3a3da;
+  --text-link: #b794ff;
+  --Blurple: rgb(160, 110, 245);
+  --Blurple-light: rgba(150, 100, 235, 0.22);
+  --Blurple-light-hover: rgba(150, 100, 235, 0.40);
+  --brand-500: #9361f0;
+  --brand-600: #7443cf;
+  --text-brand: var(--nz-accent-strong);
+  --background-primary: transparent !important;
+  --background-base-lowest: transparent !important;
+  --background-base-lower: transparent !important;
+  --chat-background-default: transparent !important;
+}
+
+/* ---------- Canales y categorías ---------- */
+#app-mount [class*="sidebarList"] h3[class*="name"],
+#app-mount [class*="sidebarList"] [class*="categoryHeader"],
+#app-mount [class*="sidebarList"] [class*="categoryHeader"] [class*="name"] {
+  color: var(--nz-category) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 10px var(--nz-category-glow);
+}
+#app-mount [class*="sidebarList"] [class*="modeDefault"] [class*="name"],
+#app-mount [class*="sidebarList"] [class*="modeLocked"] [class*="name"] {
+  color: var(--nz-channel) !important;
+}
+#app-mount [class*="sidebarList"] [class*="modeMuted"] [class*="name"] {
+  color: var(--nz-channel) !important;
+  opacity: 0.55;
+}
+#app-mount [class*="sidebarList"] [class*="modeDefault"]:hover [class*="name"],
+#app-mount [class*="sidebarList"] [class*="modeMuted"]:hover [class*="name"] {
+  color: var(--nz-channel-hover) !important;
+  opacity: 1;
+}
+#app-mount [class*="sidebarList"] [class*="modeSelected"] [class*="name"] {
+  color: var(--nz-channel-active) !important;
+  font-weight: 600 !important;
+}
+#app-mount [class*="sidebarList"] [class*="modeDefault"] svg,
+#app-mount [class*="sidebarList"] [class*="modeMuted"] svg,
+#app-mount [class*="sidebarList"] [class*="modeLocked"] svg {
+  color: var(--nz-channel) !important;
+}
+#app-mount [class*="sidebarList"] [class*="modeSelected"] svg {
+  color: var(--nz-category) !important;
+}
+
+/* Canal seleccionado y al pasar el ratón: solo color de fondo */
+#app-mount [class*="interactiveSelected"],
+#app-mount [class*="modeSelected"] {
+  background: linear-gradient(90deg, rgba(155, 105, 245, 0.38), rgba(155, 105, 245, 0.12)) !important;
+  box-shadow: inset 3px 0 0 var(--nz-accent);
+  border-radius: 6px;
+}
+#app-mount [class*="privateChannels"] [class*="interactive"]:not([class*="interactiveSelected"]):hover,
+#app-mount [class*="sidebarList"] [class*="interactive"]:not([class*="interactiveSelected"]):hover {
+  background: linear-gradient(90deg, rgba(155, 105, 245, 0.24), rgba(155, 105, 245, 0.06)) !important;
+  border-radius: 6px;
+}
+
+/* ---------- Chat: caja de texto con brillo animado ---------- */
+@keyframes nz-glow {
+  0%, 100% { box-shadow: 0 0 6px rgba(155, 105, 245, 0.35); }
+  50%      { box-shadow: 0 0 16px rgba(155, 105, 245, 0.75); }
+}
+#app-mount [class*="channelTextArea"] [class*="scrollableContainer"] {
+  border: 1px solid rgba(155, 105, 245, 0.75) !important;
+}
+/* Caja de texto más fina: menos alto alrededor de las letras.
+   Con fondo oscuro difuminado para que los mensajes que pasan por detrás
+   no se mezclen con el texto de la caja */
+/* ---- Animaciones de movimiento de la caja (sin cambios de color) ---- */
+/* Entra deslizándose desde abajo al abrir un canal */
+@keyframes nz-caja-entra {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+/* Flota muy suavemente arriba y abajo */
+@keyframes nz-flota {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+/* El texto gris entra desde la izquierda */
+@keyframes nz-texto-entra {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: none; }
+}
+/* Rebote de los iconos al pasar el ratón */
+@keyframes nz-rebote {
+  0%   { transform: scale(1) rotate(0); }
+  30%  { transform: scale(1.25) rotate(-10deg); }
+  55%  { transform: scale(0.95) rotate(6deg); }
+  75%  { transform: scale(1.1) rotate(-3deg); }
+  100% { transform: scale(1.12) rotate(0); }
+}
+
+#app-mount [class*="channelTextArea"] [class*="scrollableContainer"] {
+  min-height: 0 !important;
+  border-radius: 12px !important;
+  background: rgba(16, 12, 26, 0.85) !important;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* Toda la caja: entrada + flotar */
+#app-mount [class*="chatContent_"] [class*="channelTextArea"]:not([class*="channelTextArea"] *) {
+  animation: nz-caja-entra 0.6s cubic-bezier(0.22, 1, 0.36, 1) both,
+             nz-flota 5s 0.6s ease-in-out infinite;
+}
+/* Al pasar el ratón se levanta un poco */
+#app-mount [class*="channelTextArea"] [class*="scrollableContainer"]:hover {
+  transform: translateY(-2px);
+}
+/* Al escribir se levanta más y crece ligeramente */
+#app-mount [class*="channelTextArea"] [class*="scrollableContainer"]:focus-within {
+  animation: none !important;
+  transform: translateY(-3px) scale(1.01);
+}
+
+#app-mount [class*="channelTextArea"] [class*="placeholder_"] {
+  animation: nz-texto-entra 0.7s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Iconos de la caja (+, regalo, GIF, stickers, emoji): rebotan al pasar el ratón
+   y se hunden al pulsarlos */
+#app-mount [class*="channelTextArea"] [class*="buttons_"] [class*="button"],
+#app-mount [class*="channelTextArea"] [class*="attachButton"] {
+  transition: transform 0.15s ease;
+}
+#app-mount [class*="channelTextArea"] [class*="buttons_"] [class*="button"]:hover,
+#app-mount [class*="channelTextArea"] [class*="attachButton"]:hover {
+  animation: nz-rebote 0.5s ease both;
+}
+#app-mount [class*="channelTextArea"] [class*="buttons_"] [class*="button"]:active,
+#app-mount [class*="channelTextArea"] [class*="attachButton"]:active {
+  animation: none;
+  transform: scale(0.88);
+}
+
+/* Hueco al final del chat: el último mensaje termina por encima de la caja, no debajo */
+#app-mount [class*="messagesWrapper_"] [class*="scrollerSpacer_"] {
+  height: 24px !important;
+  min-height: 24px !important;
+}
+#app-mount [class*="chatContent_"] > form {
+  padding-top: 6px !important;
+}
+#app-mount [class*="channelTextArea"] [class*="inner_"] {
+  min-height: 0 !important;
+}
+#app-mount [class*="channelTextArea"] [class*="textArea_"],
+#app-mount [class*="channelTextArea"] [class*="slateTextArea_"] {
+  min-height: 22px !important;
+  /* Mismo hueco arriba y abajo: el texto queda centrado en la caja.
+     (La caja mide lo mismo que antes: 11 + 22 + 11 = 44px) */
+  padding-top: 11px !important;
+  padding-bottom: 11px !important;
+}
+/* El texto gris ("Enviar mensaje..." / "No tienes permiso...") centrado en vertical */
+#app-mount [class*="channelTextArea"] [class*="placeholder_"] {
+  top: 0 !important;
+  bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+#app-mount [class*="channelTextArea"] [class*="buttons_"] {
+  height: 44px !important;
+}
+#app-mount [class*="channelTextArea"] [class*="attachWrapper_"],
+#app-mount [class*="channelTextArea"] [class*="attachButton_"] {
+  height: 44px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+#app-mount [class*="channelTextArea"] [class*="scrollableContainer"]:focus-within {
+  animation: nz-glow 2.6s ease-in-out infinite;
+}
+
+/* ---------- Iconos de la barra del chat ---------- */
+#app-mount [class*="channelTextArea"] [class*="buttons"] svg,
+#app-mount [class*="toolbar"] svg {
+  color: var(--nz-accent-strong) !important;
+}
+#app-mount [class*="channelTextArea"] [class*="buttons"] [class*="button"]:hover svg,
+#app-mount [class*="toolbar"] [class*="iconWrapper"]:hover svg {
+  color: #a07bff !important;
+}
+
+/* ---------- Textos del chat ---------- */
+#app-mount [class*="messageContent"],
+#app-mount [class*="username"] {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 8px rgba(0, 0, 0, 0.55);
+}
+#app-mount [class*="timestamp"] {
+  color: var(--nz-text-muted) !important;
+}
+
+/* ---------- Barras de desplazamiento discretas ---------- */
+#app-mount [class*="scroller"]::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+#app-mount [class*="scroller"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+#app-mount [class*="scroller"]::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 4px;
+}
+#app-mount [class*="scroller"]:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 105, 245, 0.75);
+}
+
+/* ---------- Animación de entrada de mensajes ---------- */
+@keyframes nz-msg-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+#app-mount [class*="messageListItem"] {
+  animation: nz-msg-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* =====================================================================
+   LAYOUT: SERVIDORES ABAJO CENTRADOS + PERFIL ARRIBA-IZQUIERDA
+   Hecho para la estructura actual de Discord:
+   base_ (grid) > content_ > sidebar_ > [nav.guilds_, sidebarList_, panels_]
+   ===================================================================== */
+
+/* 1) Quitamos la columna de 72px de los servidores y fijamos el ancho de canales */
+#app-mount [class*="base_"]:has(nav[class*="guilds_"]) {
+  grid-template-columns: [start] 0px [guildsEnd] var(--nz-sidebar) [channelsEnd] minmax(0, 1fr) [end] !important;
+  position: relative !important;
+}
+
+/* 2) Los contenedores intermedios dejan de ser la referencia de posición,
+      así la barra y el perfil se colocan respecto a toda la ventana */
+#app-mount [class*="content_"]:has(> [class*="sidebar_"] > nav[class*="guilds_"]),
+#app-mount [class*="sidebar_"]:has(> nav[class*="guilds_"]) {
+  position: static !important;
+}
+
+/* El tirador para redimensionar la columna ya no hace falta (ancho fijo) */
+#app-mount [class*="sidebarResizeHandle_"] {
+  display: none !important;
+}
+
+/* 3) La barra de servidores: abajo, a la derecha del perfil */
+#app-mount nav[class*="guilds_"] {
+  position: absolute !important;
+  top: auto !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: auto !important;
+  height: var(--nz-bar-alto) !important;
+  min-height: 0 !important;
+  max-height: var(--nz-bar-alto) !important;
+  /* Discord le pone un margen inferior del alto del panel de perfil: lo quitamos */
+  margin: 0 !important;
+  padding: 0 !important;
+  grid-area: auto !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  z-index: 100 !important;
+  /* Fondo transparente: solo se ven los iconos sobre tu fondo */
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+#app-mount nav[class*="guilds_"] [class*="tree_"],
+#app-mount nav[class*="guilds_"] [class*="scroller_"] {
+  background: transparent !important;
+}
+
+/* Avisos de "menciones sin leer" arriba/abajo: no caben en horizontal */
+#app-mount nav[class*="guilds_"] [class*="unreadMentionsIndicator"] {
+  display: none !important;
+}
+
+#app-mount nav[class*="guilds_"] [class*="tree_"] {
+  width: 100% !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* El scroller: en fila y con scroll horizontal (rueda del ratón o Shift+rueda) */
+#app-mount nav[class*="guilds_"] [class*="scroller_"] {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  padding: 0 8px !important;
+  gap: 0 !important;
+  scrollbar-width: none;
+}
+#app-mount nav[class*="guilds_"] [class*="scroller_"]::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Centrado: márgenes automáticos a los lados (si hay muchos servidores
+   y no caben, no se corta el principio y se puede desplazar igual) */
+#app-mount nav[class*="guilds_"] [class*="scroller_"] > :nth-child(2) {
+  margin-left: auto !important;
+}
+
+/* Icono de Discord (inicio / mensajes directos): fijo en la esquina de abajo a la izquierda */
+#app-mount nav[class*="guilds_"] [class*="scroller_"] > :first-child {
+  position: fixed !important;
+  left: 8px !important;
+  bottom: calc((var(--nz-bar-alto) - 48px * var(--nz-icono-escala)) / 2) !important;
+  margin: 0 !important;
+  z-index: 102 !important;
+}
+
+/* Icono de Nazuna en lugar del logo de Discord */
+#app-mount nav[class*="guilds_"] [class*="scroller_"] > :first-child [class*="childWrapper_"] {
+  background: var(--nz-home-icon) var(--nz-home-pos) / var(--nz-home-size) no-repeat !important;
+  box-shadow: 0 0 0 2px rgba(155, 105, 245, 0.75);
+}
+#app-mount nav[class*="guilds_"] [class*="scroller_"] > :first-child [class*="childWrapper_"] svg {
+  opacity: 0 !important;
+}
+
+/* El separador que iba justo después del icono de Discord ya no hace falta */
+#app-mount nav[class*="guilds_"] [class*="scroller_"] > [class*="listItem_"]:has([class*="guildSeparator"]) {
+  display: none !important;
+}
+#app-mount nav[class*="guilds_"] [class*="scroller_"] > :last-child {
+  margin-right: auto !important;
+}
+
+/* Grupos internos (inicio, mensajes directos, lista de servidores, añadir servidor) en fila */
+#app-mount nav[class*="guilds_"] [class*="scroller_"] > [class*="stack_"],
+#app-mount nav[class*="guilds_"] [class*="scroller_"] > [class*="tutorialContainer_"],
+#app-mount nav[class*="guilds_"] [class*="folderGroup_"],
+#app-mount nav[class*="guilds_"] [class*="folderGroup_"] [class*="stack_"],
+#app-mount nav[class*="guilds_"] [class*="folderGroup_"] ul {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  width: auto !important;
+  height: auto !important;
+  flex: 0 0 auto !important;
+}
+
+/* Cada servidor */
+#app-mount nav[class*="guilds_"] [class*="listItem_"] {
+  /* Ancho justo del icono + poco margen entre servidores */
+  width: 50px !important;
+  min-width: 50px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 0 0 auto !important;
+  display: flex !important;
+  justify-content: center !important;
+  position: relative !important;
+  zoom: var(--nz-icono-escala);
+}
+
+/* Separador: de línea horizontal a vertical */
+#app-mount nav[class*="guilds_"] [class*="listItem_"]:has([class*="guildSeparator"]) {
+  width: 14px !important;
+  min-width: 14px !important;
+  height: 32px !important;
+  align-items: center !important;
+}
+#app-mount nav[class*="guilds_"] [class*="guildSeparator"] {
+  width: 2px !important;
+  height: 32px !important;
+}
+
+/* Indicador de no leído / seleccionado: de la izquierda a debajo del icono */
+#app-mount nav[class*="guilds_"] [class*="listItem_"] [class*="pill_"] {
+  position: absolute !important;
+  left: 50% !important;
+  top: 100% !important;
+  transform: translate(-50%, -50%) rotate(-90deg) !important;
+}
+
+/* Carpetas abiertas */
+#app-mount nav[class*="guilds_"] [class*="folderGroup_"] {
+  border-radius: 16px !important;
+  padding: 0 4px !important;
+}
+
+/* 4) Perfil (usuario + voz + pantalla) ARRIBA a la izquierda, encima de los canales.
+      La columna lateral pasa a ser una columna simple: perfil arriba, canales debajo,
+      y hueco abajo para la barra de servidores. */
+#app-mount [class*="sidebar_"]:has(> nav[class*="guilds_"]) {
+  display: flex !important;
+  flex-direction: column !important;
+  padding-bottom: var(--nz-bar-alto) !important;
+  box-sizing: border-box !important;
+}
+
+#app-mount section[class*="panels_"] {
+  order: -1 !important;
+  position: relative !important;
+  inset: auto !important;
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+  z-index: 101 !important;
+  background: rgba(16, 12, 26, 0.75) !important;
+  border-radius: 0 0 10px 10px;
+  backdrop-filter: blur(10px);
+  /* Orden invertido: primero tu perfil, debajo la actividad (voz, pantalla) */
+  display: flex !important;
+  flex-direction: column-reverse !important;
+  /* Sube hasta arriba del todo, encima de la franja del título */
+  margin-top: calc(-1 * var(--nz-titlebar)) !important;
+  -webkit-app-region: no-drag;
+}
+
+/* Que nada de la ventana se pueda desplazar hacia arriba/abajo con la rueda:
+   "clip" recorta sin crear scroll, y el margen deja que el perfil
+   sobresalga hacia la franja del título sin cortarse */
+#app-mount [class*="base_"]:has(nav[class*="guilds_"]) {
+  overflow: clip !important;
+}
+/* (la columna interior NO se recorta, para que el perfil pueda subir a la franja del título) */
+#app-mount [class*="content_"]:has(> [class*="sidebar_"] > nav[class*="guilds_"]) {
+  overflow: visible !important;
+}
+
+/* El perfil por encima de la franja del título */
+#app-mount section[class*="panels_"] {
+  z-index: 1000 !important;
+}
+
+/* Dejamos que el perfil sobresalga hacia arriba */
+#app-mount [class*="sidebar_"]:has(> nav[class*="guilds_"]) {
+  overflow: visible !important;
+  /* Discord le da a esta columna el ancho de servidores + canales (375px);
+     la dejamos solo con el de canales para que el perfil no tape el chat */
+  width: var(--nz-sidebar) !important;
+  min-width: var(--nz-sidebar) !important;
+  max-width: var(--nz-sidebar) !important;
+}
+#app-mount section[class*="panels_"] {
+  width: var(--nz-sidebar) !important;
+  max-width: var(--nz-sidebar) !important;
+  left: 0 !important;
+  right: auto !important;
+}
+
+/* Sin las flechitas de atrás / adelante de arriba a la izquierda */
+#app-mount [class*="base_"] > :first-child [aria-label="Atrás"],
+#app-mount [class*="base_"] > :first-child [aria-label="Adelante"],
+#app-mount [class*="base_"] > :first-child [aria-label="Back"],
+#app-mount [class*="base_"] > :first-child [aria-label="Forward"],
+#app-mount [class*="base_"] > :first-child [class*="backForward"],
+#app-mount [class*="base_"] > [class*="bar_"] [class*="leading_"] {
+  display: none !important;
+}
+
+/* Sin las flechitas de opciones al lado del micro y los cascos */
+#app-mount section[class*="panels_"] [class*="buttonChevron"],
+#app-mount section[class*="panels_"] [class*="Chevron_"],
+#app-mount section[class*="panels_"] [class*="chevron_"] {
+  display: none !important;
+}
+
+/* Actividad (Voz conectada, Pantalla 1...) más pequeña y contraída.
+   Con column-reverse, el último hijo es tu perfil; el resto es actividad. */
+#app-mount section[class*="panels_"] > :not(:last-child) {
+  zoom: 0.8;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+#app-mount section[class*="panels_"] > :not(:last-child):hover {
+  opacity: 1;
+}
+
+/* Botones de cámara / compartir / actividades / sonidos: ocultos,
+   aparecen al pasar el ratón por el panel */
+#app-mount section[class*="panels_"] [class*="actionButtons"] {
+  display: none !important;
+}
+#app-mount section[class*="panels_"]:hover [class*="actionButtons"] {
+  display: flex !important;
+}
+
+#app-mount [class*="sidebar_"]:has(> nav[class*="guilds_"]) > [class*="sidebarList_"] {
+  order: 0 !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* 5) El chat y la lista de miembros dejan hueco abajo para la barra */
+/* La zona del chat llega hasta abajo del todo (la línea de la izquierda también);
+   solo la caja de escribir y la lista de miembros se apartan de la barra */
+#app-mount [class*="content_"] > [class*="page_"],
+#app-mount [class*="base_"] > [class*="page_"] {
+  padding-bottom: 0 !important;
+}
+/* El hueco para la barra lo pone el contenedor del chat (no la caja),
+   y ese contenedor no se puede desplazar: así la caja no se mueve con la rueda
+   y los mensajes terminan justo encima de ella */
+#app-mount [class*="chatContent_"] {
+  padding-bottom: var(--nz-bar-alto) !important;
+  box-sizing: border-box !important;
+  overflow: clip !important;
+}
+/* Páginas sin chat (llamadas / canales de voz, Amigos, etc.) y llamadas con chat:
+   toda la página deja el hueco de la barra, así los controles de la llamada
+   (cámara, compartir, colgar...) quedan por encima de los servidores */
+#app-mount [class*="page_"]:not(:has([class*="chatContent_"])),
+#app-mount [class*="page_"]:has([class*="callContainer_"]) {
+  padding-bottom: var(--nz-bar-alto) !important;
+  box-sizing: border-box !important;
+}
+#app-mount [class*="page_"]:has([class*="callContainer_"]) [class*="chatContent_"] {
+  padding-bottom: 0 !important;
+}
+
+#app-mount [class*="page_"] form[class*="form_"],
+#app-mount [class*="chatContent_"] > form {
+  margin-bottom: 4px !important;
+  /* Bordes de la caja alineados con el borde de los mensajes (la raya de la izquierda) */
+  padding-left: var(--nz-caja-margen) !important;
+  padding-right: var(--nz-caja-margen) !important;
+  position: relative !important;
+  inset: auto !important;
+  flex: 0 0 auto !important;
+}
+/* (:not(svg) porque el botón "Ocultar miembros" de las llamadas lleva un icono
+   que también se llama members_, y este hueco lo deformaba) */
+#app-mount [class*="membersWrap_"] [class*="scroller_"],
+#app-mount [class*="members_"]:not(svg) {
+  padding-bottom: var(--nz-bar-alto) !important;
+  box-sizing: border-box !important;
+}
+
+/* Canales hasta abajo: Discord reservaba hueco abajo para el panel de perfil,
+   que ahora está arriba, así que lo quitamos */
+#app-mount [class*="sidebar_"]:has(> nav[class*="guilds_"]) {
+  --custom-app-panels-height: 0px !important;
+}
+#app-mount [class*="sidebarList_"],
+#app-mount [class*="sidebarList_"] > *,
+#app-mount [class*="sidebarList_"] [class*="scroller_"] {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+#app-mount [class*="sidebarList_"] [class*="scroller_"] > :last-child {
+  margin-bottom: 8px !important;
+}
+
+/* Margen izquierdo para que no se corten los nombres de canales */
+#app-mount [class*="sidebarList_"] {
+  padding-left: 6px !important;
+  box-sizing: border-box !important;
+}
+
+/* =====================================================================
+   LLAMADA: EL BOTÓN DE COMPARTIR PANTALLA Y SU FLECHITA
+   Nombres reales sacados del inspector de tu Discord:
+     attachedCaretButtonContainer_   = el grupo (botón + flechita)
+     contextMenuNub_ + attachedCaret_ = la pestaña de la flechita (20x40)
+     greenGlow_                       = esa pestaña cuando compartes (verde)
+     contextMenuCaret_                = el dibujo de la flechita (16px)
+   Discord los pinta como dos trozos pegados con las esquinas casi
+   cuadradas; aquí el grupo queda como una pastilla y la flechita se ve
+   mejor (un poco más grande y con respuesta al pasar el ratón).
+   ===================================================================== */
+
+/* 1) El grupo entero: pastilla redondeada (mide 40px de alto) */
+#app-mount [class*="attachedCaretButtonContainer"] {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+}
+
+/* 2) La pestaña de la flechita: redondeada por la derecha y sin raya */
+#app-mount [class*="contextMenuNub"][class*="attachedCaret"] {
+  border-radius: 0 20px 20px 0 !important;
+  border-left: 0 !important;
+  box-shadow: none !important;
+  transition: background-color 0.15s ease;
+}
+
+/* 3) El dibujo de la flechita: un poco más grande y más visible */
+#app-mount [class*="contextMenuCaret"] {
+  width: 18px !important;
+  height: 18px !important;
+  opacity: 0.9 !important;
+}
+
+/* 4) Al pasar el ratón por la flechita se aclara.
+      La verde (mientras compartes) se aclara en verde, no en blanco. */
+#app-mount [class*="contextMenuNub"][class*="attachedCaret"]:not([class*="greenGlow"]):hover {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+}
+#app-mount [class*="contextMenuNub"][class*="greenGlow"]:hover {
+  background-color: rgba(0, 133, 69, 0.28) !important;
+}
+#app-mount [class*="contextMenuNub"]:hover [class*="contextMenuCaret"] {
+  opacity: 1 !important;
+}
+
+/* =====================================================================
+   LLAMADA: EL HUECO DEL AVATAR MIENTRAS CARGA LA FOTO
+   (Esto NO era el círculo con la flechita; ese es el botón de
+   "Ocultar miembros", más abajo.)
+   Cuando la foto de perfil de alguien no termina de cargar, Discord deja
+   un círculo gris plano del tamaño del avatar:
+     .avatar_XpIUHy::before { background-color: var(--background-mod-subtle) }
+   Aquí solo se le cambia el color para que vaya a juego con el tema.
+   ===================================================================== */
+#app-mount [class*="callContainer"] img[class*="avatar_"]::before {
+  /* Morado suave a juego con el tema, en vez del círculo gris.
+     Si prefieres que no se vea NADA mientras carga, cambia esta línea por:
+     background-color: transparent !important; */
+  background-color: rgba(155, 105, 245, 0.25) !important;
+  border-radius: 50% !important;
+}
+/* Por si Chrome dibuja además su marca de "imagen rota" dentro del hueco */
+#app-mount [class*="callContainer"] img[class*="avatar_"] {
+  color: transparent !important;
+  font-size: 0 !important;
+}
+
+/* =====================================================================
+   LLAMADA: EL BOTÓN REDONDO DE "OCULTAR MIEMBROS"
+   Este SÍ es el círculo oscuro con la flechita que tapaba las caras.
+   Nombres reales (vistos en el inspector):
+     participantsButton_  = el botón (60x64, redondo, gris oscuro)
+     actionRow_           = la fila que lo coloca
+   Discord lo cuelga 8px POR DEBAJO del área del vídeo
+   (bottom: -8px + translateY(100%)), y como aquí la fila de caras
+   empieza justo ahí, le caía encima del avatar.
+   Solución: quitarle ese translate para que se quede en el hueco negro
+   del vídeo, y dejarlo más pequeño y a juego con el tema.
+   ===================================================================== */
+#app-mount [class*="callContainer"] [class*="actionRow_"] {
+  bottom: 8px !important;
+  transform: translateX(-50%) !important;
+}
+#app-mount [class*="callContainer"] [class*="actionRow_"] [class*="participantsButton_"] {
+  /* El tamaño lo pone Discord (flechita + icono de personas, unos 60x32).
+     Antes salía de 60x64 por culpa de la regla de members_ de más arriba. */
+  border-radius: 999px !important;
+  background: rgba(16, 12, 26, 0.85) !important;
+  box-shadow: 0 0 0 1px rgba(155, 105, 245, 0.5) !important;
+  opacity: 0.85;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+#app-mount [class*="callContainer"] [class*="actionRow_"] [class*="participantsButton_"]:hover {
+  background: rgba(40, 28, 66, 0.9) !important;
+  opacity: 1;
+}
