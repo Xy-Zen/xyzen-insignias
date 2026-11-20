@@ -1,4 +1,71 @@
 {
-    "catalogo": [],
+    "catalogo": [
+        {
+            "id": "aro-violeta",
+            "nombre": "Aro violeta",
+            "categoria": "Xyzen",
+            "descripcion": "Un aro degradado de violeta a rosa, con algo de brillo alrededor.",
+            "etiquetas": [
+                "violeta",
+                "suave"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/aro-violeta.png"
+        },
+        {
+            "id": "aro-fuego",
+            "nombre": "Aro de fuego",
+            "categoria": "Xyzen",
+            "descripcion": "Naranja por arriba y rojo por abajo, como una brasa.",
+            "etiquetas": [
+                "fuego",
+                "calido"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/aro-fuego.png"
+        },
+        {
+            "id": "aro-hielo",
+            "nombre": "Aro de hielo",
+            "categoria": "Xyzen",
+            "descripcion": "Azul claro que se aclara hasta el blanco, con escarcha alrededor.",
+            "etiquetas": [
+                "hielo",
+                "frio"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/aro-hielo.png"
+        },
+        {
+            "id": "cometa",
+            "nombre": "Cometa",
+            "categoria": "Xyzen",
+            "descripcion": "Un aro fino con un cometa dando vueltas por fuera.",
+            "etiquetas": [
+                "violeta",
+                "espacio"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/cometa.png"
+        },
+        {
+            "id": "doble-aro",
+            "nombre": "Doble aro",
+            "categoria": "Xyzen",
+            "descripcion": "Dos aros finos, uno verde y otro azul, muy discretos.",
+            "etiquetas": [
+                "verde",
+                "discreto"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/doble-aro.png"
+        },
+        {
+            "id": "chispas-oro",
+            "nombre": "Chispas de oro",
+            "categoria": "Xyzen",
+            "descripcion": "Sin aro: solo chispas doradas de distintos tamaños alrededor.",
+            "etiquetas": [
+                "oro",
+                "sin aro"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/chispas-oro.png"
+        }
+    ],
     "usuarios": {}
 }
