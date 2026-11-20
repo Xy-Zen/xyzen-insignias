@@ -9,7 +9,15 @@ fs.mkdirSync(SALIDA, { recursive: true });
 // por fuera de este radio o lo tapara.
 const LIBRE = 104;
 
+/** Para cosas con dos bordes, como un aro: d es la distancia con signo al centro del trazo. */
 const suave = (borde, d) => Math.max(0, Math.min(1, borde - Math.abs(d)));
+
+/**
+ * Para cosas macizas: f es negativo dentro de la forma y positivo fuera.
+ * Con suave() salia solo el contorno, porque en el centro la distancia es
+ * grande y lo tomaba por "lejos del borde".
+ */
+const dentroDe = f => Math.max(0, Math.min(1, -f));
 
 /** Un anillo de color, opcionalmente con el color cambiando segun el angulo. */
 function anillo({ radio, grosor, color, color2, brillo = 0 }) {
@@ -45,6 +53,106 @@ function puntos({ radio, cuantos, tam, color, desfase = 0 }) {
             if (a > 0) return [color, Math.min(1, a)];
         }
         return null;
+    };
+}
+
+/** Aro cortado a trozos, como una linea discontinua. */
+function segmentos({ radio, grosor, cuantos, relleno = 0.6, color, color2, desfase = 0 }) {
+    const paso = (Math.PI * 2) / cuantos;
+    return (x, y) => {
+        const d = Math.hypot(x, y);
+        const dentro = suave(grosor / 2, d - radio);
+        if (dentro <= 0) return null;
+
+        const ang = Math.atan2(y, x) - desfase;
+        // Cuanto nos hemos metido dentro del trozo actual, de 0 a 1.
+        let t = ((ang % paso) + paso) % paso / paso;
+        if (t > relleno) return null;
+
+        // Las puntas de cada trozo se suavizan para que no corten en seco.
+        const borde = Math.min(t, relleno - t) / relleno;
+        const a = dentro * Math.min(1, borde * 8);
+
+        let c = color;
+        if (color2) {
+            const vuelta = Math.abs(((ang / Math.PI) + 1) % 2 - 1);
+            c = mezcla(color, color2, vuelta);
+        }
+        return [c, a];
+    };
+}
+
+/** Picos triangulares apuntando hacia fuera, tipo corona. */
+function picos({ radio, cuantos, alto, ancho, color, desfase = 0 }) {
+    const paso = (Math.PI * 2) / cuantos;
+    return (x, y) => {
+        const d = Math.hypot(x, y);
+        if (d < radio || d > radio + alto) return null;
+
+        const ang = Math.atan2(y, x) - desfase;
+        // Distancia angular al eje del pico mas cercano.
+        let dist = ((ang % paso) + paso) % paso;
+        if (dist > paso / 2) dist -= paso;
+
+        // El pico se estrecha segun se aleja del centro.
+        const subida = (d - radio) / alto;
+        const medio = (ancho / 2) * (1 - subida);
+        const fuera = Math.abs(dist * d) - medio * radio;
+        const a = dentroDe(fuera);
+        return a > 0 ? [color, a] : null;
+    };
+}
+
+/** Estrellas de cuatro puntas repartidas en circulo. */
+function estrellas({ radio, cuantos, tam, color, desfase = 0, punta = 0.62 }) {
+    const centros = [];
+    for (let i = 0; i < cuantos; i++) {
+        const ang = desfase + (i / cuantos) * Math.PI * 2;
+        centros.push([Math.cos(ang) * radio, Math.sin(ang) * radio]);
+    }
+    return (x, y) => {
+        for (const [cx, cy] of centros) {
+            const dx = Math.abs(x - cx);
+            const dy = Math.abs(y - cy);
+            if (dx > tam || dy > tam) continue;
+            // Un astroide: da una estrella de cuatro puntas con los lados curvos.
+            // Cuanto mas bajo es "punta", mas afiladas y flacas salen.
+            const v = Math.pow(dx / tam, punta) + Math.pow(dy / tam, punta);
+            // El borde se suaviza en proporcion al tamano, no en pixeles.
+            const a = dentroDe((v - 1) * tam * 0.55);
+            if (a > 0) return [color, a];
+        }
+        return null;
+    };
+}
+
+/** Un aro ovalado y torcido, de los que parecen una orbita. */
+function orbita({ ancho, alto, grosor, giro, color }) {
+    const cos = Math.cos(giro);
+    const sin = Math.sin(giro);
+    return (x, y) => {
+        const gx = (x * cos + y * sin) / ancho;
+        const gy = (-x * sin + y * cos) / alto;
+        const d = Math.hypot(gx, gy);
+        // Se multiplica por el tamano para que el grosor salga en pixeles.
+        const a = suave(grosor / 2, (d - 1) * Math.min(ancho, alto));
+        return a > 0 ? [color, Math.min(1, a)] : null;
+    };
+}
+
+/** Marcas que salen del aro hacia fuera, como las de un reloj. */
+function muescas({ radio, cuantos, largo, grosor, color, desfase = 0 }) {
+    const paso = (Math.PI * 2) / cuantos;
+    return (x, y) => {
+        const d = Math.hypot(x, y);
+        if (d < radio || d > radio + largo) return null;
+
+        const ang = Math.atan2(y, x) - desfase;
+        let dist = ((ang % paso) + paso) % paso;
+        if (dist > paso / 2) dist -= paso;
+
+        const a = suave(grosor / 2, dist * d);
+        return a > 0 ? [color, Math.min(1, a)] : null;
     };
 }
 
@@ -135,6 +243,101 @@ const DECORACIONES = [
         capas: [
             puntos({ radio: 120, cuantos: 8, tam: 4.5, color: ORO }),
             puntos({ radio: 133, cuantos: 8, tam: 2.4, color: mezcla(ORO, BLANCO, 0.5), desfase: Math.PI / 8 })
+        ]
+    },
+    {
+        id: "corona",
+        nombre: "Corona",
+        categoria: "Formas",
+        descripcion: "Picos dorados apuntando hacia fuera, como una corona.",
+        etiquetas: ["oro", "picos"],
+        capas: [
+            anillo({ radio: 114, grosor: 5, color: ORO }),
+            picos({ radio: 116, cuantos: 12, alto: 17, ancho: 0.1, color: ORO })
+        ]
+    },
+    {
+        id: "estrellas",
+        nombre: "Estrellas",
+        categoria: "Formas",
+        descripcion: "Ocho estrellas de cuatro puntas, sin aro que las una.",
+        etiquetas: ["estrellas", "sin aro"],
+        capas: [
+            estrellas({ radio: 121, cuantos: 6, tam: 17, color: BLANCO }),
+            estrellas({ radio: 126, cuantos: 6, tam: 9, color: HIELO, desfase: Math.PI / 6 })
+        ]
+    },
+    {
+        id: "discontinuo",
+        nombre: "Aro discontinuo",
+        categoria: "Formas",
+        descripcion: "Un aro cortado a trozos, que va del violeta al rosa.",
+        etiquetas: ["violeta", "trozos"],
+        capas: [segmentos({ radio: 118, grosor: 9, cuantos: 16, relleno: 0.55, color: VIOLETA, color2: ROSA })]
+    },
+    {
+        id: "orbita",
+        nombre: "Órbita",
+        categoria: "Formas",
+        descripcion: "Dos aros ovalados cruzados, como las órbitas de un átomo.",
+        etiquetas: ["azul", "espacio"],
+        capas: [
+            orbita({ ancho: 138, alto: 108, grosor: 4, giro: 0.5, color: AZUL }),
+            orbita({ ancho: 138, alto: 108, grosor: 4, giro: -0.5, color: mezcla(AZUL, BLANCO, 0.45) })
+        ]
+    },
+    {
+        id: "reloj",
+        nombre: "Muescas",
+        categoria: "Formas",
+        descripcion: "Un aro fino con marcas alrededor, como la esfera de un reloj.",
+        etiquetas: ["discreto", "marcas"],
+        capas: [
+            anillo({ radio: 113, grosor: 3, color: [190, 195, 210] }),
+            muescas({ radio: 117, cuantos: 24, largo: 8, grosor: 2.6, color: [190, 195, 210] }),
+            muescas({ radio: 117, cuantos: 4, largo: 14, grosor: 4, color: BLANCO })
+        ]
+    },
+    {
+        id: "arcoiris",
+        nombre: "Arcoíris",
+        categoria: "Colores",
+        descripcion: "Un aro que pasa por todos los colores al dar la vuelta.",
+        etiquetas: ["colores", "alegre"],
+        capas: [(x, y) => {
+            const d = Math.hypot(x, y);
+            const a = suave(6, d - 118);
+            if (a <= 0) return null;
+            // El tono da una vuelta entera, de ahi que se vean todos los colores.
+            const t = ((Math.atan2(y, x) / (Math.PI * 2)) + 1) % 1;
+            const f = n => {
+                const k = (n + t * 6) % 6;
+                return Math.round(255 * Math.max(0, Math.min(1, Math.min(k, 4 - k, 1))));
+            };
+            return [[f(5), f(3), f(1)], a];
+        }]
+    },
+    {
+        id: "neon-rosa",
+        nombre: "Neón rosa",
+        categoria: "Colores",
+        descripcion: "Un aro fino con mucho brillo alrededor, como un tubo de neón.",
+        etiquetas: ["rosa", "brillo"],
+        capas: [
+            anillo({ radio: 119, grosor: 14, color: ROSA, brillo: 16 }),
+            anillo({ radio: 119, grosor: 4, color: BLANCO })
+        ]
+    },
+    {
+        id: "burbujas",
+        nombre: "Burbujas",
+        categoria: "Formas",
+        descripcion: "Burbujas de distintos tamaños flotando alrededor.",
+        etiquetas: ["azul", "sin aro"],
+        capas: [
+            puntos({ radio: 118, cuantos: 5, tam: 8, color: mezcla(AZUL, BLANCO, 0.3) }),
+            puntos({ radio: 130, cuantos: 7, tam: 4.5, color: AZUL, desfase: 0.4 }),
+            puntos({ radio: 124, cuantos: 9, tam: 2.2, color: BLANCO, desfase: 0.9 })
         ]
     }
 ];

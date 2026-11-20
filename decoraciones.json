@@ -65,6 +65,94 @@
                 "sin aro"
             ],
             "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/chispas-oro.png"
+        },
+        {
+            "id": "corona",
+            "nombre": "Corona",
+            "categoria": "Formas",
+            "descripcion": "Picos dorados apuntando hacia fuera, como una corona.",
+            "etiquetas": [
+                "oro",
+                "picos"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/corona.png"
+        },
+        {
+            "id": "estrellas",
+            "nombre": "Estrellas",
+            "categoria": "Formas",
+            "descripcion": "Ocho estrellas de cuatro puntas, sin aro que las una.",
+            "etiquetas": [
+                "estrellas",
+                "sin aro"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/estrellas.png"
+        },
+        {
+            "id": "discontinuo",
+            "nombre": "Aro discontinuo",
+            "categoria": "Formas",
+            "descripcion": "Un aro cortado a trozos, que va del violeta al rosa.",
+            "etiquetas": [
+                "violeta",
+                "trozos"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/discontinuo.png"
+        },
+        {
+            "id": "orbita",
+            "nombre": "Órbita",
+            "categoria": "Formas",
+            "descripcion": "Dos aros ovalados cruzados, como las órbitas de un átomo.",
+            "etiquetas": [
+                "azul",
+                "espacio"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/orbita.png"
+        },
+        {
+            "id": "reloj",
+            "nombre": "Muescas",
+            "categoria": "Formas",
+            "descripcion": "Un aro fino con marcas alrededor, como la esfera de un reloj.",
+            "etiquetas": [
+                "discreto",
+                "marcas"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/reloj.png"
+        },
+        {
+            "id": "arcoiris",
+            "nombre": "Arcoíris",
+            "categoria": "Colores",
+            "descripcion": "Un aro que pasa por todos los colores al dar la vuelta.",
+            "etiquetas": [
+                "colores",
+                "alegre"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/arcoiris.png"
+        },
+        {
+            "id": "neon-rosa",
+            "nombre": "Neón rosa",
+            "categoria": "Colores",
+            "descripcion": "Un aro fino con mucho brillo alrededor, como un tubo de neón.",
+            "etiquetas": [
+                "rosa",
+                "brillo"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/neon-rosa.png"
+        },
+        {
+            "id": "burbujas",
+            "nombre": "Burbujas",
+            "categoria": "Formas",
+            "descripcion": "Burbujas de distintos tamaños flotando alrededor.",
+            "etiquetas": [
+                "azul",
+                "sin aro"
+            ],
+            "imagen": "https://raw.githubusercontent.com/Xy-Zen/xyzen-insignias/main/decoraciones/burbujas.png"
         }
     ],
     "usuarios": {}
